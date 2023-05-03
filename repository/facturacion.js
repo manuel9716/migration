@@ -156,7 +156,7 @@ async function migrate() {
                 return usuarios[key];
             });
 
-        var cols = ['identificacion', 'IdFacturacion', 'Saldo', 'Estado', 'Codigo_servicio']
+        var cols = ['identificacion', 'idInventario', 'Saldo', 'Estado', 'Codigo_servicio']
         try {
             const pool2 = mysql.createPool(poolMysql)
             const promiseQuery = promisify(pool2.query).bind(pool2)
