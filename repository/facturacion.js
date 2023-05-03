@@ -7,7 +7,6 @@ const { promisify } = require('util');
 const { Console } = require('console');
 
 
-
 //SQLServer
 
 async function getUsuarios() {
@@ -20,6 +19,7 @@ async function getUsuarios() {
         console.log(error);
     }
 }
+
 
 async function getUsuarios_id(usuarios) {
     try {
@@ -52,6 +52,7 @@ async function deleteUsuariosmysql(usuarios) {
         console.log(error);
     }
 }
+
 
 async function insertUsuarios(usuarios) {
     try {
@@ -155,18 +156,18 @@ async function migrate() {
                 return usuarios[key];
             });
 
-        var cols = ['Identificacion', 'Nombre', 'Descripción', 'Saldo', 'Concepto', 'Contrato', 'Estado', 'RELLENO', 'Ciudad', 'Codigo_servicio', 'Personalizado2', 'IdFacturacion', 'IdDireccion']
+        var cols = ['identificacion', 'IdFacturacion', 'Saldo', 'Estado', 'Codigo_servicio']
         try {
             const pool2 = mysql.createPool(poolMysql)
             const promiseQuery = promisify(pool2.query).bind(pool2)
             const promisePoolEnd = promisify(pool2.end).bind(pool2)
-            let query = `TRUNCATE TABLE usuarios_bitwan`;
+            let query = `TRUNCATE TABLE usuarios_bitwan.facturacion_bloque`;
             promiseQuery(query)
             try {
                 array[0][0].forEach(element => {
                     setTimeout(() => {
-                        let colsValues = `"${element.Identificacion}",'${element.Nombre}','${element.Descripción}',${element.Saldo},'${element.Concepto}','${element.Contrato}',${element.Estado},${element.RELLENO},'${element.Ciudad}',${element.Codigo_servicio},'${element.Personalizado2}','${element.IdFacturacion}',${element.IdDireccion}`;
-                        let query = `INSERT INTO usuarios_bitwan.usuarios_bitwan (${cols}) VALUES (${colsValues})`;
+                        let colsValues = `"${element.Identificacion}",'${element.IdFacturacion}','${element.Saldo}',${element.Estado},${element.Codigo_servicio}`;
+                        let query = `INSERT INTO usuarios_bitwan.facturacion_bloque (${cols}) VALUES (${colsValues})`;
                         promiseQuery(query)
                     }, 500);
 
