@@ -150,10 +150,10 @@ async function insertUsuariosmysql(usuarios) {
 async function migrate() {
     try {
         let pool = await sql.connect(config);
-        let usuarios = await pool.request().query("SELECT*FROM USUARIOS_BITWAN");
-        var array = Object.keys(usuarios)
+        let facturacion = await pool.request().query("SELECT*FROM USUARIOS_BITWAN");
+        var array = Object.keys(facturacion)
             .map(function (key) {
-                return usuarios[key];
+                return facturacion[key];
             });
 
         var cols = ['identificacion', 'idInventario', 'Saldo', 'Estado', 'Codigo_servicio']
