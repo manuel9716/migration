@@ -12,7 +12,7 @@ const { Console } = require('console');
 async function getUsuarios() {
     try {
         let pool = await sql.connect(config);
-        let usuarios = await pool.request().query("SELECT*FROM USUARIOS_BITWAN");
+        let usuarios = await pool.request().query("SELECT*FROM FacturasBloque");
         console.log(usuarios)
         return usuarios.recordsets;
     } catch (error) {
@@ -150,7 +150,7 @@ async function insertUsuariosmysql(usuarios) {
 async function migrate() {
     try {
         let pool = await sql.connect(config);
-        let facturacion = await pool.request().query("SELECT*FROM USUARIOS_BITWAN");
+        let facturacion = await pool.request().query("SELECT*FROM FacturasBloque");
         var array = Object.keys(facturacion)
             .map(function (key) {
                 return facturacion[key];
@@ -161,13 +161,13 @@ async function migrate() {
             const pool2 = mysql.createPool(poolMysql)
             const promiseQuery = promisify(pool2.query).bind(pool2)
             const promisePoolEnd = promisify(pool2.end).bind(pool2)
-            let query = `TRUNCATE TABLE usuarios_bitwan.facturacion_bloque`;
+            let query = `TRUNCATE TABLE bitwan_dev.facturacion_bloque`;
             promiseQuery(query)
             try {
                 array[0][0].forEach(element => {
                     setTimeout(() => {
                         let colsValues = `"${element.Identificacion}",'${element.IdFacturacion}','${element.Saldo}',${element.Estado},${element.Codigo_servicio}`;
-                        let query = `INSERT INTO usuarios_bitwan.facturacion_bloque (${cols}) VALUES (${colsValues})`;
+                        let query = `INSERT INTO bitwan_dev.facturacion_bloque (${cols}) VALUES (${colsValues})`;
                         promiseQuery(query)
                     }, 500);
 
