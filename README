@@ -6,6 +6,7 @@ docker rm migracionback
 docker image rm image_migracionback
 docker build --no-cache -t image_migracionback .
 docker run --restart unless-stopped -d -p 4892:8090 --name migracionback image_migracionback
+docker run -p 4892:8090 --name migracionback image_migracionback
 image_migracionback
 
 

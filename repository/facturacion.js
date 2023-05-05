@@ -26,7 +26,7 @@ async function getUsuarios_id(usuarios) {
         console.log(usuarios)
         let pool = await sql.connect(config);
         let usuariosID = await pool.request()
-            .query(`SELECT*FROM USUARIOS_BITWAN WHERE Identificacion='${usuarios}';`)
+            .query(`SELECT*FROM FacturasBloque WHERE Identificacion='${usuarios}';`)
         console.log(usuariosID)
         return usuariosID.recordsets;
     } catch (error) {
@@ -116,7 +116,7 @@ async function getUsuariosmysql() {
         const pool = mysql.createPool(poolMysql)
         const promiseQuery = promisify(pool.query).bind(pool)
         const promisePoolEnd = promisify(pool.end).bind(pool)
-        let query = "SELECT * FROM usuarios_bitwan.usuarios_bitwan"
+        let query = "SELECT * FROM bitwan_dev.facturacion_bloque"
         const result = await promiseQuery(query)
         console.log(result)
         promisePoolEnd()
@@ -156,7 +156,7 @@ async function migrate() {
                 return facturacion[key];
             });
 
-        var cols = ['identificacion', 'idInventario', 'Saldo', 'Estado', 'Codigo_servicio']
+        var cols = ['identificacion', 'idInventario', 'Saldo', 'Estado', 'codigoServicio']
         try {
             const pool2 = mysql.createPool(poolMysql)
             const promiseQuery = promisify(pool2.query).bind(pool2)
