@@ -190,6 +190,20 @@ async function migrate() {
     }
 }
 
+//SQLServer get CarteraWhatsApp
+
+async function getCarteraWhatsApp() {
+    try {
+        let pool = await sql.connect(config);
+        let cartera = await pool.request().query("Select * FROM CarteraWhatsApp");
+        console.log(cartera)
+        return cartera.recordsets;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 module.exports = {
     getUsuarios: getUsuarios,
     getUsuarios_id: getUsuarios_id,
@@ -199,5 +213,6 @@ module.exports = {
     getUsuariosmysql: getUsuariosmysql,
     insertUsuariosmysql: insertUsuariosmysql,
     deleteUsuariosmysql: deleteUsuariosmysql,
-    migrate: migrate
+    migrate: migrate,
+    getCarteraWhatsApp: getCarteraWhatsApp
 }

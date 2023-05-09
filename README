@@ -5,8 +5,20 @@ docker stop migracionback
 docker rm migracionback
 docker image rm image_migracionback
 docker build --no-cache -t image_migracionback .
-docker run --restart unless-stopped -d -p 4892:8090 --name migracionback image_migracionback
-docker run -p 4892:8090 --name migracionback image_migracionback
+docker run --restart unless-stopped -d -p 8090:8090 --name migracionback image_migracionback
+docker run -p 8090:8090 --name migracionback image_migracionback
 image_migracionback
 
 
+ select count(*) from facturacion_bloque;
+
+
+ # para servicios
+
+docker stop serviciosdev
+docker rm serviciosdev
+docker image rm image_serviciosdev
+docker build --no-cache -t image_serviciosdev .
+docker run --restart unless-stopped -d -p 4200:4200 --name serviciosdev image_serviciosdev
+docker run -p 4200:4200 --name serviciosdev image_serviciosdev
+image_serviciosdev

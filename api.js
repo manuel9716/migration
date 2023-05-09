@@ -189,6 +189,16 @@ router.route('/migration').get((request, response) => {
     });
 });
 
+//Ruta para Cartera Whatsapp
+router.route('/carterawhatsapp').get((request, response) => {
+    console.log("entro a cartera whatsapp")
+    usuarios.getCarteraWhatsApp().then(result => {
+        response.json(result[0]);
+    }, (err) => {
+        console.log(err.message);
+        response.json(err.message)
+    });
+});
 
 
 var port = process.env.PORT || 8090;
