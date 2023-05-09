@@ -190,7 +190,7 @@ router.route('/migration').get((request, response) => {
 });
 
 //Ruta para Cartera Whatsapp
-router.route('/carterawhatsapp').get((request, response) => {
+router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response) => {
     console.log("entro a cartera whatsapp")
     usuarios.getCarteraWhatsApp().then(result => {
         response.json(result[0]);
