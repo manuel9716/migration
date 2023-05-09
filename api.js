@@ -192,11 +192,22 @@ router.route('/migration').get((request, response) => {
 //Ruta para Cartera Whatsapp
 router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response) => {
     console.log("entro a cartera whatsapp")
-    usuarios.getCarteraWhatsApp().then(result => {
-        response.json(result[0]);
+    let FechaDesde = request.params.fechaDesde
+    let FechaHasta = request.params.fechaHasta
+    fecha.getCarteraWhatsApp(FechaDesde, FechaHasta).then(result => {
+        answer = {
+            code: 200,
+            msg: "Done.",
+            data: result
+        };
+        response.json(answer);
+
     }, (err) => {
-        console.log(err.message);
-        response.json(err.message)
+        response.status(400).json({
+            ok: false,
+            err
+        });
+
     });
 });
 
@@ -204,3 +215,4 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
 var port = process.env.PORT || 8090;
 app.listen(port);
 console.log('usuarios API iniciado en el puerto: ', + port);
+
