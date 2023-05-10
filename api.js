@@ -1,7 +1,6 @@
-var usuarios_models = require('./models/facturacion_models');
-var usuarios_models2 = require('./models/facturacion_models2');
 const usuarios = require('./repository/facturacion');
-const fecha = require('./repository/facturacion');
+const fechaDesde = require('./repository/facturacion');
+const fechaHasta = require('./repository/facturacion');
 
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -195,6 +194,7 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
     console.log("entro a cartera whatsapp")
     let FechaDesde = request.params.fechaDesde
     let FechaHasta = request.params.fechaHasta
+    console.log(FechaDesde, FechaHasta)
     usuarios.getCarteraWhatsApp(FechaDesde, FechaHasta).then(result => {
         answer = {
             code: 200,
