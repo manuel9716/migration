@@ -191,10 +191,8 @@ router.route('/migration').get((request, response) => {
 
 //Ruta para Cartera Whatsapp
 router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response) => {
-    console.log("entro a cartera whatsapp")
     let FechaDesde = request.params.fechaDesde
     let FechaHasta = request.params.fechaHasta
-    console.log("entro al repositorio " + FechaDesde, FechaHasta)
     usuarios.getCarteraWhatsApp(FechaDesde, FechaHasta).then(result => {
         answer = {
             code: 200,
