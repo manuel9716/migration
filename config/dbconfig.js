@@ -3,7 +3,7 @@
 //      user: 'sa',
 //      password: '12345678',
 //      server: 'localhost\\MSSQLSERVER01',
-//      database: 'usuarios_bitwan',
+//      database: 'super_localia',
 //      options:{
 //          trustedconnection: false,
 //          enableArithAbort: true,

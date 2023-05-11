@@ -195,7 +195,8 @@ async function migrate() {
 async function getCarteraWhatsApp(fechaDesde, fechaHasta) {
     try {
         let pool = await sql.connect(config);
-        let cartera = await pool.request().query(`SELECT * FROM CarteraWhatsApp WHERE Fecha BETWEEN ${fechaDesde} AND ${fechaHasta};`);
+        let cartera = await pool.request().query(`SELECT * FROM CarteraWhatsApp WHERE Fecha BETWEEN '${fechaDesde}' AND '${fechaHasta}';`);
+        //let cartera = await pool.request().query(`SELECT * FROM MetricsTaskExecutions WHERE Started BETWEEN '${fechaDesde}' AND '${fechaHasta}';`);
         return cartera.recordsets;
     } catch (error) {
         console.log(error);
