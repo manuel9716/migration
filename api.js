@@ -194,12 +194,12 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
     let FechaDesde = request.params.fechaDesde
     let FechaHasta = request.params.fechaHasta
     usuarios.getCarteraWhatsApp(FechaDesde, FechaHasta).then(result => {
-        answer = {
-            code: 200,
-            msg: "Done.",
-            data: result
-        };
-        response.json(answer);
+        // answer = {
+        //     code: 200,
+        //     msg: "Done.",
+        //     data: result
+        // };
+        response.json(result);
 
     }, (err) => {
         response.status(400).json({
