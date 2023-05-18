@@ -194,7 +194,7 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
     let FechaDesde = request.params.fechaDesde
     let FechaHasta = request.params.fechaHasta
     usuarios.getCarteraWhatsApp(FechaDesde, FechaHasta).then(result => {
-        const result_convert = convertRowsToColumns(result)
+        // const result_convert = convertRowsToColumns(result)
         response.json(result_convert);
 
     }, (err) => {
@@ -206,21 +206,21 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
     });
 });
 
-function convertRowsToColumns(result){
-    const columnData = {};
+// function convertRowsToColumns(result){
+//     const columnData = {};
 
-  for (let i = 0; i < result.length; i++) {
-    const row = result[i];
-    for (let key in row) {
-      if (!columnData.hasOwnProperty(key)) {
-        columnData[key] = [];
-      }
-      columnData[key].push(row[key]);
-    }
-  }
-
-  return columnData;
-}
+//   for (let i = 0; i < result.length; i++) {
+//     const row = result[i];
+//     for (let key in row) {
+//       if (!columnData.hasOwnProperty(key)) {
+//         columnData[key] = [];
+//       }
+//       columnData[key].push(row[key]);
+//     }
+//   }
+// console.log(columnData)
+//   return columnData;
+// }
 
 
 var port = process.env.PORT || 8090;
