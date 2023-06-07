@@ -22,3 +22,8 @@ docker build --no-cache -t image_serviciosdev .
 docker run --restart unless-stopped -d -p 4200:4200 --name serviciosdev image_serviciosdev
 docker run -p 4200:4200 --name serviciosdev image_serviciosdev
 image_serviciosdev
+
+#docker reboot
+
+docker ps -a
+docker reboot

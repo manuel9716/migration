@@ -178,7 +178,8 @@ router.route('/migration').get((request, response) => {
             msg: "Migration complete.",
             data: result
         };
-        response.json(answer);
+        response.status(200).json(answer);
+
 
     }, (err) => {
         response.status(400).json({
@@ -194,8 +195,28 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
     let FechaDesde = request.params.fechaDesde
     let FechaHasta = request.params.fechaHasta
     usuarios.getCarteraWhatsApp(FechaDesde, FechaHasta).then(result => {
-        // const result_convert = convertRowsToColumns(result)
-        response.json(result_convert);
+
+        console.log("Funcion JsonToCSV ON")
+        
+		const header = Object.keys(result[0]);
+		//const header = Object.keys(items);
+
+		const headerString = header.join(",");
+
+		// handle null or undefined values here
+		const replacer = (key, value) => value ?? "";
+
+		const rowItems = result.map((row) =>
+			header
+				.map((fieldName) => JSON.stringify(row[fieldName], replacer))
+				.join(",")
+		);
+		rowItems.join("\n");
+		let finalItems = rowItems.join("\n");
+
+		const csv = [headerString, finalItems].join("\n");
+		
+        response.json(csv);
 
     }, (err) => {
         response.status(400).json({
@@ -205,22 +226,6 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
 
     });
 });
-
-// function convertRowsToColumns(result){
-//     const columnData = {};
-
-//   for (let i = 0; i < result.length; i++) {
-//     const row = result[i];
-//     for (let key in row) {
-//       if (!columnData.hasOwnProperty(key)) {
-//         columnData[key] = [];
-//       }
-//       columnData[key].push(row[key]);
-//     }
-//   }
-// console.log(columnData)
-//   return columnData;
-// }
 
 
 var port = process.env.PORT || 8090;
