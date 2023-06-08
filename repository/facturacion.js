@@ -197,7 +197,7 @@ async function getCarteraWhatsApp(fechaDesde, fechaHasta) {
         let pool = await sql.connect(config);
         //let cartera = await pool.request().query("SELECT*FROM FacturasBloque");
         //let cartera = await pool.request().query(`SELECT Factura AS factura, Cedula AS cedula, Teléfonos AS telefono1, Telefono2 AS telefono2, Cliente AS cliente, EMail AS email, Ciudad AS ciudad, Fecha_Emision AS fecha_emicion, Valor_FV AS valor_fv, Movil1 AS movil1, Fecha AS fecha FROM CarteraWhatsApp WHERE fecha BETWEEN '${fechaDesde}' AND '${fechaHasta}';`);
-        let cartera = await pool.request().query(`SELECT * FROM MetricsTaskExecutions WHERE Started BETWEEN '${fechaDesde}' AND '${fechaHasta}';`);
+        let cartera = await pool.request().query(`SELECT * FROM CarteraWhatsApp WHERE Started BETWEEN '${fechaDesde}' AND '${fechaHasta}';`);
         return cartera.recordsets[0];
         
     } catch (error) {
