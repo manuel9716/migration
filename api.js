@@ -204,7 +204,7 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
 		const headerString = header.join(",");
 
 		// handle null or undefined values here
-		const replacer = (key, value) => value ?? "";
+		const replacer = (key, value) => value !== null && value !== undefined ? value : "";
 
 		const rowItems = result.map((row) =>
 			header
