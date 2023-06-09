@@ -173,13 +173,8 @@ router.route('/facturacion/eliminar/:Identificacion').delete((request, response)
 //Ruta para migrar MySQL
 router.route('/migration').get((request, response) => {
     usuarios.migrate().then(result => {
-        answer = {
-            code: 200,
-            msg: "Migration complete.",
-            data: result
-        };
+        
         response.status(200).json(answer);
-
 
     }, (err) => {
         response.status(400).json({
@@ -195,8 +190,6 @@ router.route('/carterawhatsapp/:fechaDesde/:fechaHasta').get((request, response)
     let FechaDesde = request.params.fechaDesde
     let FechaHasta = request.params.fechaHasta
     usuarios.getCarteraWhatsApp(FechaDesde, FechaHasta).then(result => {
-
-        console.log("Funcion JsonToCSV ON")
         
 		const header = Object.keys(result[0]);
 		//const header = Object.keys(items);
