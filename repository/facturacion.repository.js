@@ -7,21 +7,19 @@ const { promisify } = require('util');
 const { Console } = require('console');
 
 
-//SQLServer
+// Region 1: Respository of SQLServer FacturacionBloque
 
-async function getUsuarios() {
+async function getfacturacion() {
     try {
         let pool = await sql.connect(config);
         let usuarios = await pool.request().query("SELECT*FROM FacturasBloque");
-        console.log(usuarios)
         return usuarios.recordsets;
     } catch (error) {
         console.log(error);
     }
 }
 
-
-async function getUsuarios_id(usuarios) {
+async function getfacturacion_id() {
     try {
         console.log(usuarios)
         let pool = await sql.connect(config);
@@ -35,26 +33,7 @@ async function getUsuarios_id(usuarios) {
 
 }
 
-// delete usuarios MySQL
-async function deleteUsuariosmysql(usuarios) {
-    try {
-        console.log("entre a usuarios delete")
-        const pool = mysql.createPool(poolMysql)
-        const promiseQuery = promisify(pool.query).bind(pool)
-        const promisePoolEnd = promisify(pool.end).bind(pool)
-        let query = `DELETE FROM usuarios_bitwan`;
-        console.log(query)
-        const result = await promiseQuery(query)
-        console.log(result)
-        promisePoolEnd()
-        return result;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-
-async function insertUsuarios(usuarios) {
+async function insertfacturacion() {
     try {
         console.log(usuarios)
         var cols = ['Identificacion', 'Nombre', 'Descripción', 'Saldo', 'Concepto', 'Contrato', 'Estado', 'RELLENO', 'Ciudad', 'Codigo_servicio', 'Personalizado2', 'IdFacturacion', 'IdDireccion']
@@ -69,7 +48,7 @@ async function insertUsuarios(usuarios) {
 
 }
 
-async function updateUsuarios(usuarios) {
+async function updatefacturacion() {
     try {
         console.log(usuarios.Identificacion)
         var valueSet = "Identificacion=@Identificacion,Nombre=@Nombre,Descripción=@Descripción,Saldo=@Saldo,Concepto=@Concepto,Contrato=@Contrato,Estado=@Estado,RELLENO=@RELLENO,Ciudad=@Ciudad,Codigo_servicio=@Codigo_servicio,Personalizado2=@Personalizado2,IdFacturacion=@IdFacturacion,IdDireccion=@IdDireccion";
@@ -97,7 +76,7 @@ async function updateUsuarios(usuarios) {
 
 }
 
-async function deleteUsuarios(usuarios) {
+async function deletefacturacion_id() {
     try {
         //console.log(usuarios)
         let pool = await sql.connect(config);
@@ -110,8 +89,9 @@ async function deleteUsuarios(usuarios) {
 
 }
 
-// Get usuarios MySQL
-async function getUsuariosmysql() {
+// Region 2: Respository of MySQL FacturacionBloque
+ 
+async function getfacturacionmysql() {
     try {
         const pool = mysql.createPool(poolMysql)
         const promiseQuery = promisify(pool.query).bind(pool)
@@ -126,8 +106,7 @@ async function getUsuariosmysql() {
     }
 }
 
-// insert usuarios MySQL
-async function insertUsuariosmysql(usuarios) {
+async function insertfacturacionmysql() {
     try {
         var cols = ['Identificacion', 'Nombre', 'Descripción', 'Saldo', 'Concepto', 'Contrato', 'Estado', 'RELLENO', 'Ciudad', 'Codigo_servicio', 'Personalizado2', 'IdFacturacion', 'IdDireccion']
         let colsValues = `${usuarios.Identificacion},'${usuarios.Nombre}','${usuarios.Descripción}',${usuarios.Saldo},'${usuarios.Concepto}','${usuarios.Contrato}',${usuarios.Estado},${usuarios.RELLENO},'${usuarios.Ciudad}',${usuarios.Codigo_servicio},'${usuarios.Personalizado2}','${usuarios.IdFacturacion}',${usuarios.IdDireccion}`;
@@ -145,9 +124,24 @@ async function insertUsuariosmysql(usuarios) {
     }
 }
 
+async function deletefacturacionmysql() {
+    try {
+        console.log("entre a usuarios delete")
+        const pool = mysql.createPool(poolMysql)
+        const promiseQuery = promisify(pool.query).bind(pool)
+        const promisePoolEnd = promisify(pool.end).bind(pool)
+        let query = `DELETE FROM usuarios_bitwan`;
+        console.log(query)
+        const result = await promiseQuery(query)
+        console.log(result)
+        promisePoolEnd()
+        return result;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-//Migracion de SQLServer a MySQL
-async function migrate() {
+async function migratefacturacionbloque() {
     try {
         let pool = await sql.connect(config);
         let facturacion = await pool.request().query("SELECT*FROM FacturasBloque");
@@ -190,29 +184,15 @@ async function migrate() {
     }
 }
 
-//SQLServer get CarteraWhatsApp
-
-async function getCarteraWhatsApp(fechaDesde, fechaHasta) {
-    try {
-        let pool = await sql.connect(config);
-        let cartera = await pool.request().query(`SELECT * FROM CarteraWhatsApp WHERE Fecha BETWEEN '${fechaDesde}' AND '${fechaHasta}';`);
-        return cartera.recordsets[0];
-        
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 
 module.exports = {
-    getUsuarios: getUsuarios,
-    getUsuarios_id: getUsuarios_id,
-    insertUsuarios: insertUsuarios,
-    updateUsuarios: updateUsuarios,
-    deleteUsuarios: deleteUsuarios,
-    getUsuariosmysql: getUsuariosmysql,
-    insertUsuariosmysql: insertUsuariosmysql,
-    deleteUsuariosmysql: deleteUsuariosmysql,
-    migrate: migrate,
-    getCarteraWhatsApp: getCarteraWhatsApp
+    getfacturacion: getfacturacion,
+    getfacturacion_id: getfacturacion_id,
+    insertfacturacion: insertfacturacion,
+    updatefacturacion: updatefacturacion,
+    deletefacturacion_id: deletefacturacion_id,
+    getfacturacionmysql: getfacturacionmysql,
+    insertfacturacionmysql: insertfacturacionmysql,
+    deletefacturacionmysql: deletefacturacionmysql,
+    migratefacturacionbloque: migratefacturacionbloque
 }

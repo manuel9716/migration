@@ -1,4 +1,4 @@
-class usuarios{
+class facturacion{
     constructor (Identificacion, Nombre, Descripción, Saldo, Concepto, Contrato, Estado, RELLENO, Ciudad, Codigo_servicio, Personalizado2, IdFacturacion, IdDireccion){
             this.Identificacion = Identificacion;
             this.Nombre = Nombre;
@@ -16,4 +16,4 @@ class usuarios{
     }
 }
 
-module.exports = usuarios
+module.exports = facturacion
