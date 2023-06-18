@@ -74,4 +74,3 @@ app.post('/usuario/auth', function(req, res) {
 });
 
 module.exports = app;
-

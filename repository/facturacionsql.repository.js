@@ -5,6 +5,7 @@ const mysql = require('mysql')
 const { response } = require('express');
 const { promisify } = require('util');
 const { Console } = require('console');
+const { consumers } = require('stream');
 
 
 // Region 1: Respository of SQLServer FacturacionBloque
@@ -19,27 +20,35 @@ async function getfacturacion() {
     }
 }
 
-async function getfacturacion_id() {
+async function getfilasfacturacion() {
     try {
-        console.log(usuarios)
         let pool = await sql.connect(config);
-        let usuariosID = await pool.request()
-            .query(`SELECT*FROM FacturasBloque WHERE Identificacion='${usuarios}';`)
-        console.log(usuariosID)
-        return usuariosID.recordsets;
+        let rows = await pool.request().query("SELECT COUNT(*) FROM FacturasBloque")
+        return rows.recordsets[0];
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function getfacturacion_id(usuarios) {
+    try {
+        await sql.connect(config)
+        const result = await sql.query(`SELECT *FROM FacturasBloque WHERE Identificacion='${usuarios}';`)
+        return result;
     } catch (error) {
         console.log(error);
     }
 
 }
 
-async function insertfacturacion() {
+async function insertfacturacion(usuarios) {
     try {
-        console.log(usuarios)
+        console.log("entro al repo")
         var cols = ['Identificacion', 'Nombre', 'Descripción', 'Saldo', 'Concepto', 'Contrato', 'Estado', 'RELLENO', 'Ciudad', 'Codigo_servicio', 'Personalizado2', 'IdFacturacion', 'IdDireccion']
-        let colsValues = `${usuarios.Identificacion},'${usuarios.Nombre}','${usuarios.Descripción}',${usuarios.Saldo},'${usuarios.Concepto}','${usuarios.Contrato}',${usuarios.Estado},${usuarios.RELLENO},'${usuarios.Ciudad}',${usuarios.Codigo_servicio},'${usuarios.Personalizado2}','${usuarios.IdFacturacion}',${usuarios.IdDireccion}`;
+        let colsValues = `'${usuarios.Identificacion}','${usuarios.Nombre}','${usuarios.Descripción}',${usuarios.Saldo},'${usuarios.Concepto}','${usuarios.Contrato}',${usuarios.Estado},${usuarios.RELLENO},'${usuarios.Ciudad}',${usuarios.Codigo_servicio},'${usuarios.Personalizado2}','${usuarios.IdFacturacion}',${usuarios.IdDireccion}`;
+        console.log(cols[0])
         await sql.connect(config)
-        const result = await sql.query(`INSERT INTO USUARIOS_BITWAN (${cols}) VALUES (${colsValues})`);
+        const result = await sql.query(`INSERT INTO FacturasBloque (${cols}) VALUES (${colsValues})`);
         return result;
 
     } catch (error) {
@@ -76,75 +85,23 @@ async function updatefacturacion() {
 
 }
 
-async function deletefacturacion_id() {
+async function deletefacturacion_id(usuarios) {
     try {
-        //console.log(usuarios)
-        let pool = await sql.connect(config);
-        let Deleteusua = await pool.request()
-            .query(`DELETE FROM USUARIOS_BITWAN WHERE Identificacion='${usuarios}';`)
-        return Deleteusua.recordsets;
-    } catch (error) {
-        console.log(error);
-    }
-
-}
-
-// Region 2: Respository of MySQL FacturacionBloque
- 
-async function getfacturacionmysql() {
-    try {
-        const pool = mysql.createPool(poolMysql)
-        const promiseQuery = promisify(pool.query).bind(pool)
-        const promisePoolEnd = promisify(pool.end).bind(pool)
-        let query = "SELECT * FROM bitwan_dev.facturacion_bloque"
-        const result = await promiseQuery(query)
-        console.log(result)
-        promisePoolEnd()
+        await sql.connect(config)
+        const result = await sql.query(`DELETE FROM FacturasBloque WHERE Identificacion='${usuarios}';`)
         return result;
     } catch (error) {
         console.log(error);
     }
+
 }
 
-async function insertfacturacionmysql() {
-    try {
-        var cols = ['Identificacion', 'Nombre', 'Descripción', 'Saldo', 'Concepto', 'Contrato', 'Estado', 'RELLENO', 'Ciudad', 'Codigo_servicio', 'Personalizado2', 'IdFacturacion', 'IdDireccion']
-        let colsValues = `${usuarios.Identificacion},'${usuarios.Nombre}','${usuarios.Descripción}',${usuarios.Saldo},'${usuarios.Concepto}','${usuarios.Contrato}',${usuarios.Estado},${usuarios.RELLENO},'${usuarios.Ciudad}',${usuarios.Codigo_servicio},'${usuarios.Personalizado2}','${usuarios.IdFacturacion}',${usuarios.IdDireccion}`;
-        const pool = mysql.createPool(poolMysql)
-        const promiseQuery = promisify(pool.query).bind(pool)
-        const promisePoolEnd = promisify(pool.end).bind(pool)
-        let query = `INSERT INTO usuarios_bitwan.usuarios_bitwan (${cols}) VALUES (${colsValues})`;
-        console.log(query)
-        const result = await promiseQuery(query)
-        console.log(result)
-        promisePoolEnd()
-        return result;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-async function deletefacturacionmysql() {
-    try {
-        console.log("entre a usuarios delete")
-        const pool = mysql.createPool(poolMysql)
-        const promiseQuery = promisify(pool.query).bind(pool)
-        const promisePoolEnd = promisify(pool.end).bind(pool)
-        let query = `DELETE FROM usuarios_bitwan`;
-        console.log(query)
-        const result = await promiseQuery(query)
-        console.log(result)
-        promisePoolEnd()
-        return result;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
+// Region 2: Repository of Migracion
 async function migratefacturacionbloque() {
     try {
         let pool = await sql.connect(config);
         let facturacion = await pool.request().query("SELECT*FROM FacturasBloque");
+        let rows = await pool.request().query("SELECT COUNT(*) FROM FacturasBloque")
         var array = Object.keys(facturacion)
             .map(function (key) {
                 return facturacion[key];
@@ -160,7 +117,7 @@ async function migratefacturacionbloque() {
             try {
                 array[0][0].forEach(element => {
                     setTimeout(() => {
-                        let colsValues = `"${element.Identificacion}",'${element.IdFacturacion}','${element.Saldo}',${element.Estado},${element.Codigo_servicio}`;
+                        let colsValues = `'${element.Identificacion}','${element.IdFacturacion}','${element.Saldo}',${element.Estado},${element.Codigo_servicio}`;
                         let query = `INSERT INTO bitwan_dev.facturacion_bloque (${cols}) VALUES (${colsValues})`;
                         promiseQuery(query)
                     }, 500);
@@ -187,12 +144,10 @@ async function migratefacturacionbloque() {
 
 module.exports = {
     getfacturacion: getfacturacion,
+    getfilasfacturacion: getfilasfacturacion,
     getfacturacion_id: getfacturacion_id,
     insertfacturacion: insertfacturacion,
     updatefacturacion: updatefacturacion,
     deletefacturacion_id: deletefacturacion_id,
-    getfacturacionmysql: getfacturacionmysql,
-    insertfacturacionmysql: insertfacturacionmysql,
-    deletefacturacionmysql: deletefacturacionmysql,
     migratefacturacionbloque: migratefacturacionbloque
 }

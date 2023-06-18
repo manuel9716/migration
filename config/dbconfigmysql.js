@@ -7,6 +7,9 @@
 //     port: 3306, //puerto por defecto 
 // };
 
+process.env.SEED = process.env.SEED;
+process.env.EXPIRES = process.env.EXPIRES || (60 * 60) * 2;
+
 //CONEXION MYSQL DB_CPANEL
 const configmysql ={
     user: 'su_bitwan', //usuario de la db

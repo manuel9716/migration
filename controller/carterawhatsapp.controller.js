@@ -49,5 +49,5 @@ router.get('/:fechaDesde/:fechaHasta', (request, response) => {
     });
 });
 
-module.exports = router;
+module.exports = app;
 
