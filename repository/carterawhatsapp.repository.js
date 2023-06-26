@@ -3,7 +3,6 @@ const sql = require('mssql');
 
 
 // Region 1: Respository of SQLServer CarteraWhatsapp
- 
 async function getCarteraWhatsApp(fechaDesde, fechaHasta) {
     try {
         let pool = await sql.connect(config);

@@ -14,6 +14,8 @@ app.use( require('./controller/facturacionsql.controller') );
 app.use( require('./controller/facturacionmysql.controller') );
 //Cartera_Whatsapp
 app.use( require('./controller/carterawhatsapp.controller') );
+//Cartera_Davivienda
+app.use( require('./controller/carteradavivienda.controller') );
 //Usuarios_Auth
 app.use( require('./controller/usuarios.controller') );
 
