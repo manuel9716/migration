@@ -110,15 +110,20 @@ router.route('/delete/:Identificacion').delete((request, response) => {
  */
 router.route('/migration').get((request, response) => {
     facturacionSQL.migratefacturacionbloque().then(result => {
-        response.status(200).json(answer);
-    }, (err) => {
-        response.status(400).json({
-            ok: false,
-            err
+            answer = {
+                code: 200,
+                msg: "migracion exitosa",
+            };
+            response.json(answer);
+    
+        }, (err) => {
+            response.status(400).json({
+                msj: "error al insertar en la base de datos de sql server",
+                err
+            });
+    
         });
-
     });
-});
 
 module.exports = app;
 

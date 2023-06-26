@@ -10,7 +10,6 @@ docker run -p 8090:8090 --name migracionback image_migracionback
 image_migracionback
 
 
- select count(*) from facturacion_bloque;
 
 
  # para servicios
@@ -27,3 +26,5 @@ image_serviciosdev
 
 docker ps -a
 docker reboot
+sudo reboot
+pass: qte$$216MK$

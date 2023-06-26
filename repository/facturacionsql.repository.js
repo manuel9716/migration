@@ -101,11 +101,26 @@ async function migratefacturacionbloque() {
     try {
         let pool = await sql.connect(config);
         let facturacion = await pool.request().query("SELECT*FROM FacturasBloque");
-        let rows = await pool.request().query("SELECT COUNT(*) FROM FacturasBloque")
+
         var array = Object.keys(facturacion)
             .map(function (key) {
                 return facturacion[key];
             });
+
+        let rowsNumber = array[0][0].length;
+        let lotSize = 500;
+        
+        if (rowsNumber ==0) {
+            return res.status(400).json({
+                code: 400,
+                msg: "No se encontraron facturas electrónicas."
+            });
+        }
+        lotsNumber = 1;
+        
+        if(rowsNumber > lotSize ){
+            lotsNumber = Math.ceil(rowsNumber / lotSize);
+        }        
 
         var cols = ['identificacion', 'idInventario', 'Saldo', 'Estado', 'codigoServicio']
         try {
@@ -114,21 +129,34 @@ async function migratefacturacionbloque() {
             const promisePoolEnd = promisify(pool2.end).bind(pool2)
             let query = `TRUNCATE TABLE bitwan_dev.facturacion_bloque`;
             promiseQuery(query)
-            try {
-                array[0][0].forEach(element => {
-                    setTimeout(() => {
-                        let colsValues = `'${element.Identificacion}','${element.IdFacturacion}','${element.Saldo}',${element.Estado},${element.Codigo_servicio}`;
-                        let query = `INSERT INTO bitwan_dev.facturacion_bloque (${cols}) VALUES (${colsValues})`;
-                        promiseQuery(query)
-                    }, 500);
+            const batchSize = 500; // Tamaño del lote
 
-                });
-                answer = {
-                    code: 200,
-                    msg: "Migracion completa"
-                };
-                return { answer };
-            } catch (error) {
+            try {
+                const rows = array[0][0]; // Obtén las filas del array
+                const numBatches = Math.ceil(rows.length / batchSize); // Calcula el número de lotes
+              
+                for (let i = 0; i < numBatches; i++) {
+                  const batch = rows.slice(i * batchSize, (i + 1) * batchSize); // Obtiene el lote actual
+              
+                  // Construye la consulta preparada y los valores para el lote actual
+                  const query = `INSERT INTO bitwan_dev.facturacion_bloque (${cols}) VALUES ?`;
+                  const values = batch.map(element => [
+                    element.Identificacion,
+                    element.IdFacturacion,
+                    element.Saldo,
+                    element.Estado,
+                    element.Codigo_servicio
+                  ]);
+
+
+              
+                  // Ejecuta la consulta de inserción masiva para el lote actual
+                  await promiseQuery(query, [values]);
+                }
+              
+                return "finalizado";
+              }
+            catch (error) {
                 console.log(error);
             }
             promisePoolEnd()
